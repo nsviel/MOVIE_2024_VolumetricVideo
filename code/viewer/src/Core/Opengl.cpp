@@ -146,35 +146,35 @@ void Opengl::draw_pointcloud(std::vector<glm::vec3>& vec_xyz, std::vector<glm::v
   static GLuint vbo_colors;
   static bool buffers_initialized = false;
   if (!buffers_initialized) {
-      // Generate and bind VAO
-      glGenVertexArrays(1, &vao);
-      glBindVertexArray(vao);
+    // Generate and bind VAO
+    glGenVertexArrays(1, &vao);
+    glBindVertexArray(vao);
 
-      // Generate and bind VBO for vertices
-      glGenBuffers(1, &vbo_vertices);
-      glBindBuffer(GL_ARRAY_BUFFER, vbo_vertices);
-      glBufferData(GL_ARRAY_BUFFER, vec_xyz.size() * sizeof(glm::vec3), vec_xyz.data(), GL_STATIC_DRAW);
-      glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-      glEnableVertexAttribArray(0);
+    // Generate and bind VBO for vertices
+    glGenBuffers(1, &vbo_vertices);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo_vertices);
+    glBufferData(GL_ARRAY_BUFFER, vec_xyz.size() * sizeof(glm::vec3), vec_xyz.data(), GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+    glEnableVertexAttribArray(0);
 
-      // Generate and bind VBO for colors
-      glGenBuffers(1, &vbo_colors);
-      glBindBuffer(GL_ARRAY_BUFFER, vbo_colors);
-      glBufferData(GL_ARRAY_BUFFER, vec_rgb.size() * sizeof(glm::vec3), vec_rgb.data(), GL_STATIC_DRAW);
-      glVertexAttribPointer(1, 3, GL_UNSIGNED_BYTE, GL_TRUE, 0, (void*)0);
-      glEnableVertexAttribArray(1);
+    // Generate and bind VBO for colors
+    glGenBuffers(1, &vbo_colors);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo_colors);
+    glBufferData(GL_ARRAY_BUFFER, vec_rgb.size() * sizeof(glm::vec3), vec_rgb.data(), GL_STATIC_DRAW);
+    glVertexAttribPointer(1, 3, GL_UNSIGNED_BYTE, GL_TRUE, 0, (void*)0);
+    glEnableVertexAttribArray(1);
 
-      // Unbind VAO
-      glBindVertexArray(0);
+    // Unbind VAO
+    glBindVertexArray(0);
 
-      buffers_initialized = true;
+    buffers_initialized = true;
   } else {
-      // Update VBO data if points change
-      glBindBuffer(GL_ARRAY_BUFFER, vbo_vertices);
-      glBufferSubData(GL_ARRAY_BUFFER, 0, vec_xyz.size() * sizeof(glm::vec3), vec_xyz.data());
+    // Update VBO data if points change
+    glBindBuffer(GL_ARRAY_BUFFER, vbo_vertices);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, vec_xyz.size() * sizeof(glm::vec3), vec_xyz.data());
 
-      glBindBuffer(GL_ARRAY_BUFFER, vbo_colors);
-      glBufferSubData(GL_ARRAY_BUFFER, 0, vec_rgb.size() * sizeof(glm::vec3), vec_rgb.data());
+    glBindBuffer(GL_ARRAY_BUFFER, vbo_colors);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, vec_rgb.size() * sizeof(glm::vec3), vec_rgb.data());
   }
 
   // Render the point cloud
