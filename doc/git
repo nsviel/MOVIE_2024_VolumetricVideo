@@ -1,0 +1,5 @@
+Commands:
+$ git pull -> load all repository content
+$ git commit <commit_name> -> save current local code
+$ git add . && git push -> add or remove all local folder files and push to remote git repository
+ 

@@ -1,0 +1,19 @@
+Abstract
+-----------------
+The objective of this project is to develop a prototype for a volumetric video system using three depth cameras. This system will require registering the viewpoints of each camera into a unified reference coordinate system. Once the registration is complete, the prototype can be applied to various case studies, such as digitizing a handcraft professional, capturing a dancing individual, or other dynamic subjects.
+
+
+Steps
+-----------------
+-Display 3D Point Cloud: Visualize the point cloud data captured by the depth cameras.
+-Extract Color and Depth Images: Retrieve both color and depth images from each camera for further processing.
+-Apply ONNX Segmentation Model: Utilize the ONNX segmentation model from Segment Anything to segment the subjects within the captured images.
+-Feature Extraction and Matching: Employ OpenCV to extract features from the images and match them across the different camera views.
+-Optimization Using Newton's Method: Implement basic Newton optimization techniques to derive the translation and rotation parameters for aligning the camera views.
+-Transformation Matrix Calculation: Construct transformation matrices from the obtained parameters and apply them to adjust the camera positions accordingly.
+
+
+Sample .bag data : 
+-----------------
+https://github.com/IntelRealSense/librealsense/blob/master/doc/sample-data.md
+

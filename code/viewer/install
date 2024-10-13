@@ -1,0 +1,51 @@
+Windows
+------------
+Install Intel RealSense SDK 2.0:
+    Download and install the latest Intel RealSense SDK 2.0 from Intel RealSense GitHub releases.
+    During installation, make sure to select the option to install development headers and libraries.
+
+Install CMake:
+    Download and install CMake from the CMake website.
+
+Install OpenGL and GLFW:
+    Download the latest GLFW binaries from GLFW's website.
+    Place the include and lib folders in your project directory or configure your environment variables.
+
+Install Visual Studio:
+    Install Visual Studio with C++ development tools.
+    Configure your project to link with the librealsense2.lib, glfw3.lib, and opengl32.lib libraries.
+
+Set up the Project:
+    Ensure that your project includes the path to Intel RealSense headers and links to the RealSense, OpenGL, and GLFW libraries.
+
+
+
+
+
+MacOS
+------------
+Install Homebrew:
+    Open Terminal and install Homebrew if you haven’t already:
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+Install Intel RealSense SDK 2.0:
+    Run the following command to install the RealSense SDK:
+    brew install librealsense
+
+Install CMake:
+    Install CMake via Homebrew:
+    brew install cmake
+
+Install GLFW:
+    Install GLFW using Homebrew:
+    brew install glfw
+
+Install OpenGL:
+    MacOS comes with OpenGL by default, so additional OpenGL setup is typically unnecessary.
+
+Build the Project:
+    Create and navigate to a build directory:
+    mkdir build && cd build
+
+Generate the makefiles and build:
+    cmake .. && make -j5
