@@ -1,12 +1,13 @@
 #pragma once
 
 #include <GL/glew.h>
+#include <GL/gl.h>
+#include <GL/glu.h>
 #include <GLFW/glfw3.h>
 #include <librealsense2/rs.hpp> // Include RealSense Cross Platform API
 #include <glm/glm.hpp>
 #include <iostream>
 #include <cmath>
-#include <GL/glu.h>
 
 namespace core{class Camera;}
 namespace core{class Imgui;}

@@ -140,7 +140,7 @@ void Opengl::draw_axes(){
 }
 void Opengl::draw_pointcloud(std::vector<glm::vec3>& vec_xyz, std::vector<glm::vec3>& vec_rgb){
   //---------------------------
-
+/*
   static GLuint vao;
   static GLuint vbo_vertices;
   static GLuint vbo_colors;
@@ -181,8 +181,8 @@ void Opengl::draw_pointcloud(std::vector<glm::vec3>& vec_xyz, std::vector<glm::v
   glBindVertexArray(vao);
   glDrawArrays(GL_POINTS, 0, vec_xyz.size());
   glBindVertexArray(0);
+*/
 
-/*
   glBegin(GL_POINTS);
   for (size_t i = 0; i < vec_xyz.size(); ++i) {
     // Set the color for the point
@@ -192,7 +192,7 @@ void Opengl::draw_pointcloud(std::vector<glm::vec3>& vec_xyz, std::vector<glm::v
     glVertex3f(vec_xyz[i].x, vec_xyz[i].y, vec_xyz[i].z);
   }
   glEnd();
-*/
+
   //---------------------------
 }
 
