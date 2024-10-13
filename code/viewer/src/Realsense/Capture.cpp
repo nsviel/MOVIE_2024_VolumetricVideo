@@ -57,7 +57,7 @@ void Capture::run(){
     // Generate the pointcloud and texture mappings
     points = pc.calculate(depth);
 
-    opengl->draw_pointcloud(points, color);
+    //opengl->draw_pointcloud(points, color);
     opengl->loop_end();
 
   }

@@ -1,9 +1,7 @@
 #pragma once
 
-#include <GLFW/glfw3.h>
 #include <iostream>
 #include <cmath>
-#include <GL/glu.h>
 
 
 namespace core{

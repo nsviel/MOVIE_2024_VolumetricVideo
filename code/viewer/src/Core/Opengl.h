@@ -1,7 +1,9 @@
 #pragma once
 
-#include <librealsense2/rs.hpp> // Include RealSense Cross Platform API
+#include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <librealsense2/rs.hpp> // Include RealSense Cross Platform API
+#include <glm/glm.hpp>
 #include <iostream>
 #include <cmath>
 #include <GL/glu.h>
@@ -29,7 +31,7 @@ public:
   //Subfunction
   GLFWwindow* init_window(int width, int height, const char* title);
   void draw_axes();
-  void draw_pointcloud(const rs2::points& points, const rs2::video_frame& color);
+  void draw_pointcloud(std::vector<glm::vec3>& vec_xyz, std::vector<glm::vec3>& vec_rgb);
 
 public:
   core::Camera* camera;

@@ -36,6 +36,11 @@ Opengl::~Opengl(){}
 void Opengl::init(){
   //---------------------------
 
+
+  glfwInit();
+  glfwWindowHint(GLFW_OPENGL_CORE_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+  glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
+
   // Create a simple OpenGL window for rendering
   this->window = this->init_window(1280, 720, "Volumetric video");
 
@@ -49,6 +54,8 @@ void Opengl::init(){
   glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
   camera->set_projection_matrix(1280, 720);
+
+  glewInit();
 
   //---------------------------
 }
@@ -131,43 +138,61 @@ void Opengl::draw_axes(){
 
   //---------------------------
 }
-void Opengl::draw_pointcloud(const rs2::points& points, const rs2::video_frame& color){
+void Opengl::draw_pointcloud(std::vector<glm::vec3>& vec_xyz, std::vector<glm::vec3>& vec_rgb){
   //---------------------------
 
+  static GLuint vao;
+  static GLuint vbo_vertices;
+  static GLuint vbo_colors;
+  static bool buffers_initialized = false;
+  if (!buffers_initialized) {
+      // Generate and bind VAO
+      glGenVertexArrays(1, &vao);
+      glBindVertexArray(vao);
+
+      // Generate and bind VBO for vertices
+      glGenBuffers(1, &vbo_vertices);
+      glBindBuffer(GL_ARRAY_BUFFER, vbo_vertices);
+      glBufferData(GL_ARRAY_BUFFER, vec_xyz.size() * sizeof(glm::vec3), vec_xyz.data(), GL_STATIC_DRAW);
+      glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+      glEnableVertexAttribArray(0);
+
+      // Generate and bind VBO for colors
+      glGenBuffers(1, &vbo_colors);
+      glBindBuffer(GL_ARRAY_BUFFER, vbo_colors);
+      glBufferData(GL_ARRAY_BUFFER, vec_rgb.size() * sizeof(glm::vec3), vec_rgb.data(), GL_STATIC_DRAW);
+      glVertexAttribPointer(1, 3, GL_UNSIGNED_BYTE, GL_TRUE, 0, (void*)0);
+      glEnableVertexAttribArray(1);
+
+      // Unbind VAO
+      glBindVertexArray(0);
+
+      buffers_initialized = true;
+  } else {
+      // Update VBO data if points change
+      glBindBuffer(GL_ARRAY_BUFFER, vbo_vertices);
+      glBufferSubData(GL_ARRAY_BUFFER, 0, vec_xyz.size() * sizeof(glm::vec3), vec_xyz.data());
+
+      glBindBuffer(GL_ARRAY_BUFFER, vbo_colors);
+      glBufferSubData(GL_ARRAY_BUFFER, 0, vec_rgb.size() * sizeof(glm::vec3), vec_rgb.data());
+  }
+
+  // Render the point cloud
+  glBindVertexArray(vao);
+  glDrawArrays(GL_POINTS, 0, vec_xyz.size());
+  glBindVertexArray(0);
+
+/*
   glBegin(GL_POINTS);
-  auto vertices = points.get_vertices();
-  auto tex_coords = points.get_texture_coordinates();
+  for (size_t i = 0; i < vec_xyz.size(); ++i) {
+    // Set the color for the point
+    glColor3ub(vec_rgb[i].x, vec_rgb[i].y, vec_rgb[i].z);
 
-  int color_width = color.get_width();
-  int color_height = color.get_height();
-  const uint8_t* color_data = reinterpret_cast<const uint8_t*>(color.get_data());
-
-  for (size_t i = 0; i < points.size(); ++i)
-  {
-      if (vertices[i].z) // Skip zero depth points
-      {
-          // Map texture coordinates to pixel coordinates
-          int u = std::min(std::max(int(tex_coords[i].u * color_width), 0), color_width - 1);
-          int v = std::min(std::max(int(tex_coords[i].v * color_height), 0), color_height - 1);
-
-          // Extract color data at the mapped pixel position
-          int idx = (v * color_width + u) * 3; // RGB, so 3 channels per pixel
-          uint8_t r = color_data[idx];
-          uint8_t g = color_data[idx + 1];
-          uint8_t b = color_data[idx + 2];
-
-          //location
-          float x = vertices[i].x * 1;
-          float y = -vertices[i].y * 1;
-          float z = vertices[i].z * 1;
-
-          // Set the point color and position
-          glColor3ub(r, g, b);
-          glVertex3f(x ,y, z);
-      }
+    // Set the position for the point
+    glVertex3f(vec_xyz[i].x, vec_xyz[i].y, vec_xyz[i].z);
   }
   glEnd();
-
+*/
   //---------------------------
 }
 
