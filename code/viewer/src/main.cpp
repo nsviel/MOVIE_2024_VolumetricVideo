@@ -8,7 +8,7 @@ int main(int argc, char * argv[]){
 
   //Init objects
   core::Opengl* opengl = new core::Opengl();
-  realsense::Capture* realsense = new realsense::Capture(opengl);
+  realsense::Playback* realsense = new realsense::Playback(opengl);
 
   //Run program
   opengl->init();

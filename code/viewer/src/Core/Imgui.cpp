@@ -4,6 +4,7 @@
 #include <imgui/imgui.h>
 #include <imgui/imgui_impl_glfw.h>
 #include <imgui/imgui_impl_opengl3.h>
+#include <iostream>
 
 
 namespace core{
@@ -26,9 +27,7 @@ void Imgui::init(GLFWwindow* window){
   IMGUI_CHECKVERSION();
   ImGui::CreateContext();
   ImGuiIO& io = ImGui::GetIO(); (void)io; // You can add your fonts here if needed
-
-  // Setup ImGui style
-  ImGui::StyleColorsDark();
+  this->set_style();
 
   // Initialize ImGui for GLFW and OpenGL
   ImGui_ImplGlfw_InitForOpenGL(window, true); // Make sure to pass your GLFW window
@@ -68,18 +67,36 @@ void Imgui::clean(){
 }
 
 //Subfunction
+void Imgui::set_style(){
+  ImGuiStyle& style = ImGui::GetStyle();
+  //---------------------------
+
+  // Setup ImGui style
+  ImGui::StyleColorsDark();
+
+  // Set the default window background color to black
+  style.Colors[ImGuiCol_WindowBg] = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
+
+  //---------------------------
+}
 void Imgui::mouse_zoom(){
   ImGuiIO& io = ImGui::GetIO();
   //---------------------------
 
   if (io.MouseWheel != 0) {
-    camera->camera.distance -= io.MouseWheel * 0.05f;  // Adjust zoom speed
+    camera->camera.distance -= io.MouseWheel * 0.15f;  // Adjust zoom speed
   }
 
   //---------------------------
 }
 void Imgui::mouse_arcball(){
   //---------------------------
+
+  // don't pass mouse and keyboard presses further if an ImGui widget is active
+  auto& io = ImGui::GetIO();
+  if (io.WantCaptureMouse || io.WantCaptureKeyboard) {
+      return;
+  }
 
   if (ImGui::IsMouseClicked(0)) { // 0 is the left mouse button
     camera->camera.rotating = true;
@@ -92,12 +109,12 @@ void Imgui::mouse_arcball(){
   }
 
   ImVec2 mouse_pos = ImGui::GetMousePos();
-  if (camera->camera.rotating){
+  if (camera->camera.rotating && !ImGui::IsWindowHovered()){
     double dx = mouse_pos.x - camera->camera.last_x;
     double dy = mouse_pos.y - camera->camera.last_y;
 
     // Adjust these factors to reduce sensitivity
-    const float sensitivity_x = 0.01f; // Lower value for less sensitivity
+    const float sensitivity_x = 0.005f; // Lower value for less sensitivity
     const float sensitivity_y = 0.005f; // Lower value for less sensitivity
 
     camera->camera.angle_x += static_cast<float>(dx) * sensitivity_x;

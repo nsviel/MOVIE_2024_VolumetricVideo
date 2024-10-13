@@ -22,6 +22,7 @@ public:
   void clean();
 
   //Subfunction
+  void set_style();
   void mouse_zoom();
   void mouse_arcball();
 
