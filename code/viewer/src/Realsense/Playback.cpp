@@ -6,6 +6,7 @@
 #include <imgui/imgui.h>
 #include <imgui/imgui_impl_glfw.h>
 #include <imgui/imgui_impl_opengl3.h>
+#include <opencv2/opencv.hpp>
 #include <glm/glm.hpp>
 
 
@@ -49,6 +50,7 @@ void Playback::run(){
 
     // Try to get a color frame
     auto color = frames.get_color_frame();
+    this->display_image_color(color);
 
     // For cameras that don't have an RGB sensor, map to infrared instead
     if (!color)
@@ -59,6 +61,7 @@ void Playback::run(){
 
     // Get the depth frame
     auto depth = frames.get_depth_frame();
+    this->display_image_depth(depth);
 
     // Generate the pointcloud and texture mappings
     points = pc.calculate(depth);
@@ -71,7 +74,7 @@ void Playback::run(){
 }
 
 //Subfunction
-void Playback::draw_pointcloud(const rs2::points& points, const rs2::video_frame& color) {
+void Playback::draw_pointcloud(const rs2::points& points, const rs2::video_frame& color){
   //---------------------------
 
   std::vector<glm::vec3> vec_xyz;
@@ -108,6 +111,67 @@ void Playback::draw_pointcloud(const rs2::points& points, const rs2::video_frame
   }
 
   opengl->draw_pointcloud(vec_xyz, vec_rgb);
+
+  //---------------------------
+}
+void Playback::display_image_color(const rs2::video_frame& color){
+  //---------------------------
+
+  if (color) {
+    // Retrieve color frame dimensions
+    int width = color.get_width();
+    int height = color.get_height();
+
+    // Convert the color frame to OpenCV Mat
+    cv::Mat color_image(cv::Size(width, height), CV_8UC3, (void*)color.get_data(), cv::Mat::AUTO_STEP);
+
+    // Convert from RGB to BGR as OpenCV uses BGR format by default
+  //  cv::cvtColor(color_image, color_image, cv::COLOR_RGB2BGR);
+
+    // Resize the image to 150x150 pixels
+    int new_width = 500;
+    int new_height = static_cast<int>(height * (static_cast<float>(new_width) / width));
+    cv::Mat resized_image;
+    cv::resize(color_image, resized_image, cv::Size(new_width, new_height));
+
+    // Display the resized image using OpenCV
+    cv::imshow("Color Frame", resized_image);
+    cv::waitKey(1);
+  }
+
+  //---------------------------
+}
+void Playback::display_image_depth(const rs2::video_frame& depth) {
+  //---------------------------
+
+  if (depth) {
+    // Retrieve depth frame dimensions
+    int width = depth.get_width();
+    int height = depth.get_height();
+
+    // Convert the depth frame to OpenCV Mat
+    cv::Mat depth_image(cv::Size(width, height), CV_16UC1, (void*)depth.get_data(), cv::Mat::AUTO_STEP);
+
+    // Normalize the depth values to the range [0, 255] for visualization
+    cv::Mat depth_normalized;
+    depth_image.convertTo(depth_normalized, CV_8UC1, 255.0 / 5000.0); // Assuming depth values range from 0 to 65535
+
+    // Apply a colormap to the normalized depth image
+    cv::Mat depth_colormap;
+    cv::applyColorMap(depth_normalized, depth_colormap, cv::COLORMAP_JET); // You can choose any colormap
+
+    // Set the new width and calculate height to maintain aspect ratio
+    int new_width = 500;  // You can adjust this value
+    int new_height = static_cast<int>(height * (static_cast<float>(new_width) / width));
+
+    // Resize the colormap image while maintaining aspect ratio
+    cv::Mat resized_depth_colormap;
+    cv::resize(depth_colormap, resized_depth_colormap, cv::Size(new_width, new_height));
+
+    // Display the resized depth colormap image using OpenCV
+    cv::imshow("Depth Colormap", resized_depth_colormap);
+    cv::waitKey(1);
+  }
 
   //---------------------------
 }

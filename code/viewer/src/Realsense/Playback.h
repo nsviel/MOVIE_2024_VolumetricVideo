@@ -22,7 +22,9 @@ public:
 
   //Subfunction
   void draw_pointcloud(const rs2::points& points, const rs2::video_frame& color);
-
+  void display_image_color(const rs2::video_frame& color);
+  void display_image_depth(const rs2::video_frame& depth);
+  
 public:
   core::Opengl* opengl;
   realsense::GUI* gui;

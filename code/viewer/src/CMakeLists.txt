@@ -17,6 +17,7 @@ file(GLOB_RECURSE ALL_SOURCES
 find_package(realsense2 REQUIRED)
 find_package(OpenGL REQUIRED)
 find_package(PkgConfig REQUIRED)
+find_package(OpenCV REQUIRED)
 pkg_search_module(GLFW REQUIRED glfw3)
 
 # Include directories
@@ -44,6 +45,7 @@ target_link_libraries(${EXECUTABLE_NAME}
   ${realsense2_LIBRARY}
   ${OPENGL_LIBRARIES}
   ${GLFW_LIBRARIES}
+  ${OpenCV_LIBS}
 
   -lGLEW
 )
